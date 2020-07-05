@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './App.css';
 import board from './seventeenBoard.png'
-import { getCord } from './utils';
+import { getCord, postJSON } from './utils';
 function App() {
   const [xValue, setXValue] = useState(0);
   const [yValue, setYValue] = useState(0);
   const [radius, setRadius] = useState(0);
   const [cord, setCord] = useState("--");
+  const [count, setCount] = useState(0); // or all routes ?
   const handleClick = (event) => {
     const { target } = event;
     if (target.classList.contains("wrapper-svg")) {
@@ -14,10 +15,13 @@ function App() {
       // dosomething - display the calculated coordinate instead of just user input?
       const clickX = event.clientX - box.x;
       const clickY = event.clientY - box.y;
+      console.warn(clickX, clickY); 
       setXValue(clickX);
       setYValue(clickY);
       setRadius(box.height / 40);
-      setCord(getCord(clickX, clickY));
+      const c = getCord(clickX, clickY)
+      const cordObj = {moves: [c]};
+      setCount(postJSON(cordObj, '/sift'))
     }
   }
   return (
